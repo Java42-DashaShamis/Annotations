@@ -4,13 +4,23 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Stream;
 
+import telran.annotation.validation.constraints.Max;
 
-public class Validator {
+/* V.R. There are not following files:
+ * 1. Class XXX.java with fields and annotation
+ * 2. Appl.java with main
+ * It is impossible to test something without these files
+ */
+
+public class Validator { 
 	/**
 	 * validates the given object against the constraints in the package telran.annotation.validation.constraints
 	 * @param obj
 	 * @return list constraint violation messages or empty list if no violations
 	 */
+	// V.R. What is this? 
+	// Annotation has to be calculated as field.getAnnotation(Max.class)
+	// for each of fields.
 	@Max(value = 1000000)
 	Max maxAnnotation;
 	@Min(value = 0)
@@ -26,10 +36,15 @@ public class Validator {
 			
 			Field[] fields = obj.getClass().getDeclaredFields();
 			Stream.of(fields).forEach(f -> {
+				// V.R. "!-" has to be changed to "=="
 				if(f.getAnnotation(Valid.class)!=null) {
 					addViolationsMasseges(listViolations, f, obj);
 				}else {
 					try {
+						/* V.R. This recursive call will clear the list of 
+						 * violations and previously save violations
+						 * will be cleared.
+						 */
 						listViolations.addAll(validate(f.get(obj)));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();
