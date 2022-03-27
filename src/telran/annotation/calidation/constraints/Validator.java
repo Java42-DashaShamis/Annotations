@@ -26,6 +26,7 @@ public class Validator {
 			
 			Field[] fields = obj.getClass().getDeclaredFields();
 			Stream.of(fields).forEach(f -> {
+				//[YG] looks like there should be == null
 				if(f.getAnnotation(Valid.class)!=null) {
 					addViolationsMasseges(listViolations, f, obj);
 				}else {
@@ -57,6 +58,7 @@ public class Validator {
 		}
 		private String max(Field field, Object obj) {
 			//TODO
+			//[YG] lot of repeated code and getDouble wil work only for double field, though max/min might be applied for any numeric type
 				String res = "";
 				try {
 					double fieldValue = field.getDouble(obj);
